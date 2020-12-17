@@ -109,6 +109,356 @@ Vue.use(ElementUI);
 
 ### Others
 
+# Vue
+
+## [v-on](https://cn.vuejs.org/v2/api/#v-on)
+
+- ### **缩写：**`@`
+
+- ### **参数**：`event`
+
+- ### **修饰符：**
+
+  - `.stop` - 调用 `event.stopPropagation()`。
+  - `.prevent` - 调用 `event.preventDefault()`。
+  - `.capture` - 添加事件侦听器时使用 capture 模式。
+  - `.self` - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
+  - `.{keyCode | keyAlias}` - 只当事件是从特定键触发时才触发回调。
+  - `.native` - 监听组件根元素的原生事件。
+  - `.once` - 只触发一次回调。
+  - `.left` - (2.2.0) 只当点击鼠标左键时触发。
+  - `.right` - (2.2.0) 只当点击鼠标右键时触发。
+  - `.middle` - (2.2.0) 只当点击鼠标中键时触发。
+  - `.passive` - (2.3.0) 以 `{ passive: true }` 模式添加侦听器
+
+- ### **用法：**
+
+  绑定事件监听器。事件类型由参数指定。表达式可以是一个方法的名字或一个内联语句，如果没有修饰符也可以省略。
+
+  用在普通元素上时，只能监听[**原生 DOM 事件**](https://developer.mozilla.org/zh-CN/docs/Web/Events)。用在自定义元素组件上时，也可以监听子组件触发的**自定义事件**。
+
+  在监听原生 DOM 事件时，方法以事件为唯一的参数。如果使用内联语句，语句可以访问一个 `$event` property：`v-on:click="handle('ok', $event)"`。
+
+  从 `2.4.0` 开始，`v-on` 同样支持不带参数绑定一个事件/监听器键值对的对象。注意当使用对象语法时，是不支持任何修饰器的。
+
+- ### **示例**：
+
+  ```html
+  <!-- 方法处理器 -->
+  <button v-on:click="doThis"></button>
+  
+  <!-- 动态事件 (2.6.0+) -->
+  <button v-on:[event]="doThis"></button>
+  
+  <!-- 内联语句 -->
+  <button v-on:click="doThat('hello', $event)"></button>
+  
+  <!-- 缩写 -->
+  <button @click="doThis"></button>
+  
+  <!-- 动态事件缩写 (2.6.0+) -->
+  <button @[event]="doThis"></button>
+  
+  <!-- 停止冒泡 -->
+  <button @click.stop="doThis"></button>
+  
+  <!-- 阻止默认行为 -->
+  <button @click.prevent="doThis"></button>
+  
+  <!-- 阻止默认行为，没有表达式 -->
+  <form @submit.prevent></form>
+  
+  <!--  串联修饰符 -->
+  <button @click.stop.prevent="doThis"></button>
+  
+  <!-- 键修饰符，键别名 -->
+  <input @keyup.enter="onEnter">
+  
+  <!-- 键修饰符，键代码 -->
+  <input @keyup.13="onEnter">
+  
+  <!-- 点击回调只会触发一次 -->
+  <button v-on:click.once="doThis"></button>
+  
+  <!-- 对象语法 (2.4.0+) -->
+  <button v-on="{ mousedown: doThis, mouseup: doThat }"></button>
+  ```
+
+  在子组件上监听自定义事件 (当子组件触发“my-event”时将调用事件处理器)：
+
+  ```html
+  <my-component @my-event="handleThis"></my-component>
+  
+  <!-- 内联语句 -->
+  <my-component @my-event="handleThis(123, $event)"></my-component>
+  
+  <!-- 组件中的原生事件 -->
+  <my-component @click.native="onClick"></my-component>
+  ```
+
+- ### **参考**：
+
+  - [事件处理器](https://cn.vuejs.org/v2/guide/events.html)
+  - [组件 - 自定义事件](https://cn.vuejs.org/v2/guide/components.html#监听子组件事件)
+
+## [v-bind](https://cn.vuejs.org/v2/api/#v-bind)
+
+- ### **缩写**：`:`
+
+- ### **参数**：`attrOrProp (optional)`
+
+- ### **修饰符**：
+
+  - `.prop` - 作为一个 DOM property 绑定而不是作为 attribute 绑定。([差别在哪里？](https://stackoverflow.com/questions/6003819/properties-and-attributes-in-html#answer-6004028))
+  - `.camel` - (2.1.0+) 将 kebab-case attribute 名转换为 camelCase。(从 2.1.0 开始支持)
+  - `.sync` (2.3.0+) 语法糖，会扩展成一个更新父组件绑定值的 `v-on` 侦听器。
+
+- ### **用法**：
+
+  动态地绑定一个或多个 attribute，或一个组件 prop 到表达式。
+
+  在绑定 `class` 或 `style` attribute 时，支持其它类型的值，如数组或对象。可以通过下面的教程链接查看详情。
+
+  在绑定 prop 时，prop 必须在子组件中声明。可以用修饰符指定不同的绑定类型。
+
+  没有参数时，可以绑定到一个包含键值对的对象。注意此时 `class` 和 `style` 绑定不支持数组和对象。
+
+- ### **示例**：
+
+  ```html
+  <!-- 绑定一个 attribute -->
+  <img v-bind:src="imageSrc">
+  
+  <!-- 动态 attribute 名 (2.6.0+) -->
+  <button v-bind:[key]="value"></button>
+  
+  <!-- 缩写 -->
+  <img :src="imageSrc">
+  
+  <!-- 动态 attribute 名缩写 (2.6.0+) -->
+  <button :[key]="value"></button>
+  
+  <!-- 内联字符串拼接 -->
+  <img :src="'/path/to/images/' + fileName">
+  
+  <!-- class 绑定 -->
+  <div :class="{ red: isRed }"></div>
+  <div :class="[classA, classB]"></div>
+  <div :class="[classA, { classB: isB, classC: isC }]">
+  
+  <!-- style 绑定 -->
+  <div :style="{ fontSize: size + 'px' }"></div>
+  <div :style="[styleObjectA, styleObjectB]"></div>
+  
+  <!-- 绑定一个全是 attribute 的对象 -->
+  <div v-bind="{ id: someProp, 'other-attr': otherProp }"></div>
+  
+  <!-- 通过 prop 修饰符绑定 DOM attribute -->
+  <div v-bind:text-content.prop="text"></div>
+  
+  <!-- prop 绑定。“prop”必须在 my-component 中声明。-->
+  <my-component :prop="someThing"></my-component>
+  
+  <!-- 通过 $props 将父组件的 props 一起传给子组件 -->
+  <child-component v-bind="$props"></child-component>
+  
+  <!-- XLink -->
+  <svg><a :xlink:special="foo"></a></svg>
+  ```
+
+  `.camel` 修饰符允许在使用 DOM 模板时将 `v-bind` property 名称驼峰化，例如 SVG 的 `viewBox` property：
+
+  ```html
+  <svg :view-box.camel="viewBox"></svg>
+  ```
+
+  在使用字符串模板或通过 `vue-loader`/`vueify` 编译时，无需使用 `.camel`。
+
+- ### 详细使用
+
+  #### **一、绑定HTML Class**
+
+  1. ##### 对象语法
+
+     - 可以使用`v-bind:class`来绑定一个对象，以动态地切换class。**注意：**<u>`v-bind:class`指令可以与普通的class特性共存</u>
+
+     -  代码示例：
+
+       ```html
+       <template>
+           <div id="app">
+               <ul class="box" v-bind:class="{'textColor':isColor, 'textSize':isSize}">
+                   <li>学习Vue</li>
+                   <li>学习Node</li>
+                   <li>学习React</li>
+               </ul>
+               <ul class="box" :class="classObject"> //等同于上面的
+                   <li>学习Vue</li>
+                   <li>学习Node</li>
+                   <li>学习React</li>
+               </ul>
+           </div>
+       </template>
+       <script>
+           var vm= new Vue({
+               el:'#app',
+               data:{
+                   isColor:true,
+                   isSize:true,
+                   classObject:{'textColor':false,'textSize':true}
+               }
+           })
+       </script>
+       <style>
+           .box{
+           	border:1px dashed #f0f;
+           }
+           .textColor{
+               color:#f00;
+               background-color:#eef;
+           }
+           .textSize{
+               font-size:30px;
+               font-weight:bold;
+           }
+       </style>
+       ```
+
+       从图中可以看到，HTML最终渲染为 `<ul class="box textColor textSize"></ul>`
+
+       当 isColor 和 isSize 变化时，class列表将相应的更新。
+
+       例如，将isSize改成false，class列表将变为`<ul class="box textColor"></ul>`
+
+  2. #####  数组语法
+
+     ###### 把一个数组传给v-bind:class，以应用一个class列表
+
+     ```html
+     <ul class="box" :class="[classA, classB]">
+         <li>学习Vue</li>
+         <li>学习Node</li>
+         <li>学习React</li>
+     </ul>
+     
+     var vm= new Vue({
+         el:‘.box‘,
+         data:{
+             classObject:{
+                 ‘textColor‘:true,
+                 ‘textSize‘:false //不渲染，注意看下面的截图
+             }
+         }
+     })
+     ```
+
+     **如果想根据条件切换列表中的class，可以用三目运算**
+
+     ```html
+     <ul class="box" :class="[isA?classA:'', classB]">
+         <li>学习Vue</li>
+         <li>学习Node</li>
+         <li>学习React</li>
+     </ul>
+      
+     var vm= new Vue({
+         el:‘.box‘,
+         data:{
+             classA:‘textColor‘,
+             classB:‘textSize‘,
+             isA:false 
+         }
+     })
+     ```
+
+     在这个例子中，首先判断isA的boolean值，如果为true，则渲染classA；如果为false，则不渲染。classB没有做三目运算，所以是始终显示的，看看页面截图
+
+     ![img](http://s2.51cto.com/wyfs02/M01/89/2F/wKioL1gLFw7zSxVrAACvZz_XHmk974.png)
+
+  #### **二、绑定内联样式**
+
+  1. ##### 对象语法
+
+     ```html
+     <ul class="box" :class="classObject">
+         <li>学习Vue</li>
+         <li>学习Node</li>
+         <li>学习React</li>
+     </ul>
+     
+     var vm= new Vue({
+         el:‘#box‘,
+         data:{
+             activeColor:‘#f00‘,
+             size:‘30px‘,
+             shadow:‘5px 2px 6px #000‘
+         }
+     })
+     
+     ```
+
+     
+
+  2. ##### 数组语法
+
+- ### **参考**：
+
+  - [Class 与 Style 绑定](https://cn.vuejs.org/v2/guide/class-and-style.html)
+  - [组件 - Props](https://cn.vuejs.org/v2/guide/components.html#通过-Prop-向子组件传递数据)
+  - [组件 - `.sync` 修饰符](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-修饰符)
+
+## [v-model](https://cn.vuejs.org/v2/api/#v-model)
+
+
+
+## [v-text](https://cn.vuejs.org/v2/api/#v-text)
+
+
+
+## [v-html](https://cn.vuejs.org/v2/api/#v-html)
+
+
+
+## [v-pre](https://cn.vuejs.org/v2/api/#v-pre)
+
+
+
+## [v-cloak](https://cn.vuejs.org/v2/api/#v-cloak)
+
+
+
+## [v-once](https://cn.vuejs.org/v2/api/#v-once)
+
+
+
+## [v-if](https://cn.vuejs.org/v2/api/#v-if)
+
+
+
+## [v-else](https://cn.vuejs.org/v2/api/#v-else)
+
+
+
+## [v-else-if](https://cn.vuejs.org/v2/api/#v-else-if)
+
+
+
+## [v-show](https://cn.vuejs.org/v2/api/#v-show)
+
+
+
+## [v-for](https://cn.vuejs.org/v2/api/#v-for)
+
+
+
+## [v-slot](https://cn.vuejs.org/v2/api/#v-slot)
+
+
+
+
+
+
+
 
 
 ## VUE Router
@@ -360,6 +710,153 @@ const router = new VueRouter ({
 ```
 
 #### 4.4 动态匹配路由的基本用法
+
+##### 4.4.1 基本使用
+
+- **应用场景：通过动态路由参数的模式进行路由匹配**
+
+```js
+var router = new VueRouter({
+	routes:[
+		//动态路劲参数 以冒号开头
+		{path:'/user/:id',component:User}
+	]
+})
+```
+
+```js
+const User = {
+    //路由组件中通过$route.params获取路由参数
+    template:'<div>User {{$route.params.id}}</div>'
+}
+```
+
+##### 4.4.2 路由组件传递参数
+
+- **$route与对应路由形成高度耦合，不够灵活，所以可以使用props将组件和路由解耦**
+
+###### 1. **props的值为布尔类型**
+
+```js
+const router = new VueRouter({
+	routes:[
+        //如果props被设置为true，route.params将被设置为组件属性
+        {path:'/user/:id',component:User,props : true}
+    ]
+})
+const User = {
+    props:['id'],//使用props接收路由参数
+    template:'<div>用户ID:{{id}}</div>' //使用路由参数
+}
+```
+
+###### **2.props的值为对象类型**
+
+- **该方法只能传静态参数**
+
+```js
+const router = new VueRouter({
+	routes:[
+        //如果props是一个对象，它会被按照原样设置为组件属性
+        {path:'/user/:id',component:User,props : {uname:'lisi',age:12}}
+    ]
+})
+const User = {
+    props:['uname','age'],//使用props接收路由参数
+    template:'<div>用户ID:{{$route.params.id}} 姓名：{{uname}} 年龄：{{age}}</div>' //使用路由参数
+}
+```
+
+###### 3.props的值为函数类型
+
+```js
+const router = new VueRouter({
+    routes:[
+        //如果props是一个函数，则这个函数接收 route 对象为自己的参数
+        {
+            path:'/user/:id',
+            components:User,
+            props:route=>({uname:'zs',age:20,id:route.params.id})
+        }
+    ]
+})
+const User = {
+    props:['uname','age','id'],//使用props接收路由参数
+    template:'<div>用户ID:{{d}} 姓名：{{uname}} 年龄：{{age}}</div>' //使用路由参数
+}
+```
+
+#### 4.5 vue-router编程式导航
+
+##### 4.5.1 页面导航的两种方式
+
+- **声明式导航**：通过<u>点击链接</u>实现导航的方式，叫做声明式导航
+
+  例如：普通网页中的<a></a>链接后者vue中的<router-link></router-link>
+
+- 编程式导航：通过调用Javascript形式的API实现导航的方式，叫做编程式导航
+
+  例如：普通网页中的location.href
+
+##### 4.5.2 编程式导航基本用法
+
+常用的编程式导航API如下：
+
+- **this.$router.push('hash地址')**
+
+  参数规则：
+
+  ```js
+  //字符串（路径名称）
+  router.push('/home')
+  //对象
+  router.push({path:'/home'})
+  //命名的路由（传递参数）
+  router.push({name:'/user',params:{userId:123}})
+  //带查询参数，变成 /register?uname=lisi
+  router.push({path:'/register',query:{uname:'lisi'}})
+  ```
+
+  
+
+- **this.$router.go(n)**
+
+```js
+const User = {
+    template:'<div><button @click="goRegister">跳转到注册页面</button></div>',
+ 	methods:{
+        goRegister:function(){
+            //用编程式导航控制路由跳转
+            this.$router.push('/register');
+        }
+    }
+}
+```
+
+
+
+
+
+#### 4.6vue-router命名路由
+
+##### 4.6.1 命令路由的配置规则
+
+为了更加方便的表示路由的路径，可以给路由规则起一个别名，即“命名路由”
+
+```js
+const router = new VueRouter({
+    routes:[
+        {
+            path:'/user/:id',
+            name:'user',
+            component:User
+        }
+    ]
+})
+//使用命名路由实现页面的跳转
+<router-link :to="{name:'user',params:{id:123}}">User</router-link>
+router.push({name:'user',params:{id:123}})
+```
 
 
 
@@ -620,8 +1117,6 @@ export default new Router({
 **$router 是“路由实例”对象，即使用 new VueRouter创建的实例，包括了路由的跳转方法，钩子函数等。**
 
 **$router常见跳转方法:**
-
-
 
 ```kotlin
 <button @click="goToMenu" class="btn btn-success">Let's order！</button>
