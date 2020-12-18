@@ -1,113 +1,41 @@
-# element UI
+# HTML
 
-## 如何使用element UI
+## label
 
-- 在HTML中引入VUE和element UI
+### 定义和用法
+
+<label> 标签为 input 元素定义标注（标记）。
+
+label 元素不会向用户呈现任何特殊效果。不过，它为鼠标用户改进了可用性。如果您在 label 元素内点击文本，就会触发此控件。就是说，当用户选择该标签时，浏览器就会自动将焦点转到和标签相关的表单控件上。
+
+<label> 标签的 for 属性应当与相关元素的 id 属性相同。
+
+### label的`for`属性
+
+<label>是专门为<input>元素服务的，为其定义标记。给 label 加了 for 属性绑定了input控件后，可以提高鼠标用户的用户体检。如果在label 元素内点击文本，就会触发此控件，也就是说，当用户渲染该标签时，浏览器就会自动将焦点转到和标签相关的表单控件上。
+
+### label 和表单控件绑定
+
+#### 方法一：隐式绑定
+
+将表单控件作为label的内容，此时不需要for属性，绑定的控件也不需要id属性。
 
 ```html
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+隐式绑定：
+<label>Date of Birth: <input type="text" name="DofB" /></label>
 ```
 
-- ​    使用npm以及vue-cli脚手架来创建vue项目并引入element UI
+#### 方法二：显示绑定
 
-```vue
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+为label标签下的for属性命名一个目标表单的id
+
+```html
+显式绑定：
+<label for="SSN">Social Security Number:</label>
+<input type="text" name="SocSecNum" id="SSN" />
 ```
 
-## 组件学习
 
-### Basic
-
-
-
-### Form
-
-####  Form 表单
-
-##### 使用说明：
-
-- `<el-from>`为整个表单，在`<el-from>`中可以放置多个表单域`<el-form-item>`，在表单域中放置输入框、选择器、单选框、多选框等控件
-
-- 在 Form 组件中，每一个表单域由一个 Form-Item 组件构成，表单域中可以放置各种类型的表单控件，包括 Input、Select、Checkbox、Radio、Switch、DatePicker、TimePicker
-- 当一个 form 元素中只有一个输入框时，在该输入框中按下回车应提交该表单。如果希望阻止这一默认行为，可以在 `<el-form>` 标签上添加 `@submit.native.prevent`。
-- `<el-from>`具有以下属性
-
-| 属性名                  | 说明                                                         | 类型    | 可选值                | 默认值 |
-| ----------------------- | ------------------------------------------------------------ | ------- | --------------------- | ------ |
-| model                   | 表单数据对象                                                 | object  | ——                    | ——     |
-| rules                   | 表单验证规则                                                 | object  | ——                    | ——     |
-| inline                  | 行内表单模式                                                 | boolean | ——                    | false  |
-| label-position          | 表单域标签的位置，如果值为 left 或者 right 时，则需要设置 `label-width` | string  | right/left/top        | right  |
-| label-width             | 表单域标签的宽度，例如 '50px'。作为 Form 直接子元素的 form-item 会继承该值。支持 `auto`。 | string  | ——                    | ——     |
-| label-suffix            | 表单域标签的后缀                                             | string  | ——                    | ——     |
-| hide-required-asterisk  | 是否显示必填字段的标签旁边的红色星号                         | boolean | ——                    | false  |
-| show-message            | 是否显示校验错误信息                                         | boolean | ——                    | true   |
-| inline-message          | 是否以行内形式展示校验信息                                   | boolean | ——                    | false  |
-| status-icon             | 是否在输入框中显示校验结果反馈图标                           | boolean | ——                    | false  |
-| validate-on-rule-change | 是否在 `rules` 属性改变后立即触发一次验证                    | boolean | ——                    | true   |
-| size                    | 用于控制该表单内组件的尺寸                                   | string  | medium / small / mini | ——     |
-| disabled                | 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效 | boolean | ——                    | false  |
-
-- **model**的绑定要使用`:model="fromData"`，不能使用`v-model="fromData"`
-- 在`<el-from>`中绑定**rules**时，使用`:rules="ruleFrom"`进行绑定 ，在`<el-from-item>`中定义prop，prop的名称要与ruleFrom中对象键值对应
-- **data中的form要和rules结构完全一样，一一对应，在prop中要定义的和v-model的一样**
-- :inline="true"
-
-##### 实例：
-
-```vue
-<el-form :inline="true" :model="formInline" rules="rules" class="demo-form-inline">
-  <el-form-item label="审批人" prop="user">
-    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit">查询</el-button>
-  </el-form-item>
-</el-form>
-<script>
-  export default {
-    data() {
-      return {
-        formInline: {
-          user: ''
-        },
-        rules:{
-            user:[{required:true,message:'请输入用户名', trigger: 'blur'}]
-        }
-      }
-    },
-    methods: {
-      onSubmit() {
-        console.log('submit!');
-      }
-    }
-  }
-</script>
-```
-
-##### **注意：**
-
-- **data中的form要和rules结构完全一样，一一对应，在prop中要定义的和v-model的一样**
-- 
-
-### Data
-
-
-
-### Notice
-
-
-
-### Navigation
-
-
-
-### Others
 
 # Vue
 
@@ -457,7 +385,19 @@ Vue.use(ElementUI);
 
 
 
+# vue踩坑
 
+## v-if 与 v-for 一起使用
+
+当 `v-if` 与 `v-for` 一起使用时，`v-for` 具有比 `v-if` 更高的优先级，这意味着 `v-if` 将分别重复运行于每个 `v-for` 循环中，即每次`v-for`的循环中都会执行`v-if`的判断，因此会影响性能。所以，不推荐v-if和v-for同时使用
+
+## 代替的方法
+
+### 方法一、不用v-if或者分开使用
+
+### 方法二、使用computed进行预过滤
+
+## 参考：[v-if和v-for一起使用的几个方法](https://www.cnblogs.com/mmzuo-798/p/11943448.html)
 
 
 
@@ -1176,3 +1116,153 @@ export default {
 ```
 
 此时我们随意输入一个错误的地址时，便会自动跳转到404页面
+
+
+
+
+
+# element UI
+
+## 如何使用element UI
+
+- 在HTML中引入VUE和element UI
+
+```html
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+```
+
+- ​    使用npm以及vue-cli脚手架来创建vue项目并引入element UI
+
+```vue
+import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+```
+
+## 组件学习
+
+### Basic
+
+
+
+### Form
+
+####  Form 表单
+
+##### 使用说明：
+
+- `<el-from>`为整个表单，在`<el-from>`中可以放置多个表单域`<el-form-item>`，在表单域中放置输入框、选择器、单选框、多选框等控件
+
+- 在 Form 组件中，每一个表单域由一个 Form-Item 组件构成，表单域中可以放置各种类型的表单控件，包括 Input、Select、Checkbox、Radio、Switch、DatePicker、TimePicker
+- 当一个 form 元素中只有一个输入框时，在该输入框中按下回车应提交该表单。如果希望阻止这一默认行为，可以在 `<el-form>` 标签上添加 `@submit.native.prevent`。
+- `<el-from>`具有以下属性
+
+| 属性名                  | 说明                                                         | 类型    | 可选值                | 默认值 |
+| ----------------------- | ------------------------------------------------------------ | ------- | --------------------- | ------ |
+| model                   | 表单数据对象                                                 | object  | ——                    | ——     |
+| rules                   | 表单验证规则                                                 | object  | ——                    | ——     |
+| inline                  | 行内表单模式                                                 | boolean | ——                    | false  |
+| label-position          | 表单域标签的位置，如果值为 left 或者 right 时，则需要设置 `label-width` | string  | right/left/top        | right  |
+| label-width             | 表单域标签的宽度，例如 '50px'。作为 Form 直接子元素的 form-item 会继承该值。支持 `auto`。 | string  | ——                    | ——     |
+| label-suffix            | 表单域标签的后缀                                             | string  | ——                    | ——     |
+| hide-required-asterisk  | 是否显示必填字段的标签旁边的红色星号                         | boolean | ——                    | false  |
+| show-message            | 是否显示校验错误信息                                         | boolean | ——                    | true   |
+| inline-message          | 是否以行内形式展示校验信息                                   | boolean | ——                    | false  |
+| status-icon             | 是否在输入框中显示校验结果反馈图标                           | boolean | ——                    | false  |
+| validate-on-rule-change | 是否在 `rules` 属性改变后立即触发一次验证                    | boolean | ——                    | true   |
+| size                    | 用于控制该表单内组件的尺寸                                   | string  | medium / small / mini | ——     |
+| disabled                | 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效 | boolean | ——                    | false  |
+
+- **model**的绑定要使用`:model="fromData"`，不能使用`v-model="fromData"`
+- 在`<el-from>`中绑定**rules**时，使用`:rules="ruleFrom"`进行绑定 ，在`<el-from-item>`中定义prop，prop的名称要与ruleFrom中对象键值对应
+- **data中的form要和rules结构完全一样，一一对应，在prop中要定义的和v-model的一样**
+- :inline="true"
+
+##### 实例：
+
+```vue
+<el-form :inline="true" :model="formInline" rules="rules" class="demo-form-inline">
+  <el-form-item label="审批人" prop="user">
+    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="onSubmit">查询</el-button>
+  </el-form-item>
+</el-form>
+<script>
+  export default {
+    data() {
+      return {
+        formInline: {
+          user: ''
+        },
+        rules:{
+            user:[{required:true,message:'请输入用户名', trigger: 'blur'}]
+        }
+      }
+    },
+    methods: {
+      onSubmit() {
+        console.log('submit!');
+      }
+    }
+  }
+</script>
+```
+
+##### **注意：**
+
+- **data中的form要和rules结构完全一样，一一对应，在prop中要定义的和v-model的一样**
+- 
+
+### Data
+
+
+
+### Notice
+
+
+
+### Navigation
+
+
+
+### Others
+
+
+
+
+
+# 正则表达式
+
+## **元字符(metacharacter)**
+
+### `\b`
+
+代表着单词的开头或结尾，也就是单词的分界处。虽然通常英文的单词是由空格，标点符号或者换行来分隔的，但是\b并不匹配这些单词分隔字符中的任何一个，它**只匹配一个位置**。
+
+例如要查找单词`hi`,为避免匹配*him*,*history*,*high*等等，使用`\b`来限定：
+
+```
+\bhi\b
+```
+
+
+
+### `.`
+
+
+
+# 开发案例
+
+- 实现列表滚动，当鼠标移入后停止滚动，点击相关条目可以实现
+
+- 
+
+  
+
+
+
